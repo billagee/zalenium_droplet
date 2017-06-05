@@ -13,8 +13,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
     ports:
-      - 4444:4444
-      - 5555:5555
+      - 127.0.0.1:44444:4444
+      - 127.0.0.1:55555:5555
     command: >
       start --chromeContainers 1
             --firefoxContainers 0
