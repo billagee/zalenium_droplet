@@ -16,7 +16,7 @@ ExecStartPre=-/bin/bash -c 'docker network ls -qf "name=%i_" | xargs docker netw
 ExecStartPre=-/bin/bash -c 'docker ps -aqf "name=%i_*" | xargs docker rm'
 
 # Compose up
-ExecStart=/usr/local/bin/docker-compose up
+ExecStart=/usr/local/bin/docker-compose up --force-recreate
 
 # Compose down, remove containers and volumes
 ExecStop=/usr/local/bin/docker-compose down -v
