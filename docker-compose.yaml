@@ -13,8 +13,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
     ports:
-      - 127.0.0.1:44444:4444
-      - 127.0.0.1:55555:5555
+      - 4444:4444
     command: >
       start --chromeContainers 1
             --firefoxContainers 0
@@ -27,7 +26,11 @@ services:
             --testingBotEnabled false
             --startTunnel false
             --sendAnonymousUsageInfo false
+            --gridUser "test"
+            --gridPassword "PUT_YOUR_OWN_UNIQUE_GRID_PASSWORD_HERE"            
     environment:
+      - HOST_UID
+      - HOST_GID    
       - SAUCE_USERNAME
       - SAUCE_ACCESS_KEY
       - BROWSER_STACK_USER
