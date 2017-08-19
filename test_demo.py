@@ -1,5 +1,5 @@
 # Run with:
-#  py.test test_demo.py --grid_ip YOUR_GRID_IP -s
+#  py.test test_demo.py --hub_host YOUR_GRID_IP -s
 
 import pytest
 from selenium import webdriver
@@ -8,14 +8,14 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import sys
 import unittest
 
-grid_ip = pytest.config.option.grid_ip
-# Error out if --grid_ip value wasn't given or isn't a string
+hub_host = pytest.config.option.hub_host
+# Error out if --hub_host value wasn't given or isn't a string
 try:
-    if not isinstance(grid_ip, basestring):
-        message = "The --grid_ip value '{0}' is not a valid string!".format(grid_ip)
+    if not isinstance(hub_host, basestring):
+        message = "The --hub_host value '{0}' is not a valid string!".format(hub_host)
         sys.exit(message)
 except NameError:
-    message = "Please provide the IP of your grid hub with --grid_ip."
+    message = "Please provide the IP of your grid hub with --hub_host."
     sys.exit(message)
 
 class TestDemo(unittest.TestCase):
@@ -25,16 +25,20 @@ class TestDemo(unittest.TestCase):
             'platform': "Linux",
             'browserName': "chrome",
         }
-        self.grid_ip = pytest.config.option.grid_ip
+        hub_host = pytest.config.option.hub_host
+        hub_port = "4444"
+        hub_url = "http://test:PUT_YOUR_OWN_UNIQUE_GRID_PASSWORD_HERE@{0}:{1}/wd/hub".format(hub_host, hub_port)
+        self.video_dashboard_url = "http://{0}:{1}/dashboard/".format(hub_host, hub_port)
         self.driver = webdriver.Remote(
-            command_executor="http://{0}:4444/wd/hub".format(self.grid_ip),
+            command_executor=hub_url,
             desired_capabilities=desired_cap)
-        print("View live VNC session for your test at http://{0}:4444/grid/admin/live".format(self.grid_ip))
+        live_url = "http://{0}:{1}/grid/admin/live".format(hub_host, hub_port)
+        print("View live VNC session for your test at {0}".format(live_url))
 
     def tearDown(self):
         # On Sauce Labs this is important to stop running tests:
         self.driver.quit()
-        print("View archived video of your test at http://{0}:5555".format(self.grid_ip))
+        print("View archived video of your test at {0}".format(self.video_dashboard_url))
 
     # Test logic goes here
     def test_demo(self):
